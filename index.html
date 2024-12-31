@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ぱずが課題に全く手をつけず作ったページ</title>
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: black;
+    }
+
+    img {
+      width: 300px;
+      height: auto;
+      transition: filter 0.5s ease;
+    }
+
+
+    #imageback{
+      opacity: 1;
+    }
+
+    #imagekage{
+      opacity:1;
+    }
+
+    #imagehuti{
+      opacity: 1;
+    }
+
+    #imagemoji{
+      opacity: 1;
+    }
+
+  </style>
+</head>
+
+<body>
+  <dev class = "text">
+    <h1 class="red">Shake your phone!!!!</h1>
+
+  <div class = "waku">
+  <div class = "relative">
+
+    <img id="imageback" src="back.png" class="back">
+    <img id="imagekage" src="kage.png" class="kage" style="opacity: 0;">
+    <img id="imagehuti" src="huti.png" class="huti" style="opacity: 0;">
+    <img id="imagemoji" src="moji.png" class="moji">
+    
+  </div>
+  
+  <script>
+    // 振動を検知するための閾値
+    const SHAKE_THRESHOLD = 15;
+    let lastX = null, lastY = null, lastZ = null;
+    let lastUpdate = 0;
+
+    //現在の透明度
+    let alpha = 0;
+    let alphahuti = 0;
+
+    const imageback = document.getElementById('imageback');
+    const imagekage = document.getElementById('imagekage');
+    const imagehuti = document.getElementById('imagehuti');
+    const imagemoji = document.getElementById('imagemoji');
+
+    // 加速度センサーのデータを取得
+    window.addEventListener('devicemotion', (event) => {
+      const currentTime = Date.now();
+      if ((currentTime - lastUpdate) > 100) { // データ取得間隔を100msに制限
+        const { x, y, z } = event.acceleration;
+        if (lastX !== null && lastY !== null && lastZ !== null) {
+          const deltaX = x - lastX;
+          const deltaY = y - lastY;
+          const deltaZ = z - lastZ;
+          const speed = Math.abs(deltaX + deltaY + deltaZ);
+
+          if (speed > SHAKE_THRESHOLD) {
+            increaseImagekageOpcity();
+          }
+        }
+        lastX = x;
+        lastY = y;
+        lastZ = z;
+        lastUpdate = currentTime;
+      }
+    });
+
+
+    // 透明度を上げる関数
+    function increaseImagekageOpcity() {
+
+      if(alpha < 0.7){//透明度MAX=1
+        alpha += 0.05;
+        if(alpha > 0.7){
+          alpha = 0.7;
+        }
+        imagekage.style.opacity = alpha;
+      }
+
+      if(alphahuti < 1){//透明度MAX=1
+        alphahuti += 0.05;
+        if(alphahuti > 1){
+          alphahuti = 1;
+        }
+        imagehuti.style.opacity = alphahuti;
+      }
+      
+    }
