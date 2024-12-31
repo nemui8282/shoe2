@@ -25,13 +25,8 @@
  <body> 
   <img id="targetImage" src="ringo.jpg" style="opacity:0;"> 
   
-<!--   <h1>加速度センサーのテスト</h1> -->
   <!-- センサーの許可を求めるボタン -->
   <button id="permissionButton">加速度センサーを許可</button>
-  <!-- センサーの状態やエラー、データを表示するためのエリア -->
-<!--   <div id="status">センサーの状態を表示します...</div> -->
-  <!-- XYZの合計値を表示するエリア -->
-<!--   <div id="sum">XYZの合計値: 計算中...</div> -->
   
   <script>
 
@@ -79,26 +74,26 @@
     });
 
    // 【2】加速度センサーのデータを取得し、表示
-    function startDeviceMotionListener() {
-      // デバイスの動き（加速度）を取得
-      window.addEventListener('devicemotion', (event) => {
-        // 加速度データを取得
-        const { x, y, z } = event.acceleration; // X, Y, Z 軸の加速度
-        if (x !== null && y !== null && z !== null) {
-          // XYZの加速度値をそれぞれ取得して合計値を計算
-          const sum = Math.abs(x) + Math.abs(y) + Math.abs(z); // 絶対値の合計
+    // function startDeviceMotionListener() {
+    //   // デバイスの動き（加速度）を取得
+    //   window.addEventListener('devicemotion', (event) => {
+    //     // 加速度データを取得
+    //     const { x, y, z } = event.acceleration; // X, Y, Z 軸の加速度
+    //     if (x !== null && y !== null && z !== null) {
+    //       // XYZの加速度値をそれぞれ取得して合計値を計算
+    //       const sum = Math.abs(x) + Math.abs(y) + Math.abs(z); // 絶対値の合計
           
-          // 加速度データをリアルタイムで表示
-          statusDiv.textContent = `加速度センサーのデータ - X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`;
-          // XYZの合計値を表示
-          sumDiv.textContent = `XYZの合計値: ${sum.toFixed(2)}`;
-        } else {
-          // データが取得できない場合
-          statusDiv.textContent = 'センサーからデータが取得できません。';
-          sumDiv.textContent = 'XYZの合計値: 取得できません';
-        }
-      });
-    }
+    //       // 加速度データをリアルタイムで表示
+    //       statusDiv.textContent = `加速度センサーのデータ - X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`;
+    //       // XYZの合計値を表示
+    //       sumDiv.textContent = `XYZの合計値: ${sum.toFixed(2)}`;
+    //     } else {
+    //       // データが取得できない場合
+    //       statusDiv.textContent = 'センサーからデータが取得できません。';
+    //       sumDiv.textContent = 'XYZの合計値: 取得できません';
+    //     }
+    //   });
+    // }
    
     //加速度センサーのデータを取得
     window.addEventListener('devicemotion', (event) => {
