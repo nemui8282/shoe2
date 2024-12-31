@@ -25,6 +25,14 @@
  <body> 
   <img id="targetImage" src="ringo.jpg" style="opacity:0;"> 
   
+  <h1>加速度センサーのテスト</h1>
+  <!-- センサーの許可を求めるボタン -->
+  <button id="permissionButton">加速度センサーを許可</button>
+  <!-- センサーの状態やエラー、データを表示するためのエリア -->
+  <div id="status">センサーの状態を表示します...</div>
+  <!-- XYZの合計値を表示するエリア -->
+  <div id="sum">XYZの合計値: 計算中...</div>
+  
   <script>
 
     // 状態を表示するためのDOM要素を取得
@@ -41,6 +49,56 @@
     let alpha = 0;
    
     const image = document.getElementById('targetImage');
+
+       // 【1】センサー許可リクエストをボタンに紐付け
+    permissionButton.addEventListener('click', async () => {
+      // iPhoneではセンサー使用の許可が必要な場合がある
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        try {
+          // 許可をリクエスト
+          const permission = await DeviceMotionEvent.requestPermission();
+          if (permission === 'granted') {
+            // 許可された場合
+            statusDiv.textContent = 'センサーが許可されました！動作を確認してください。';
+            permissionButton.style.display = 'none'; // 許可後、ボタンを非表示にする
+            startDeviceMotionListener(); // センサーを開始
+          } else {
+            // 許可が拒否された場合
+            statusDiv.textContent = 'センサーの使用が許可されませんでした。';
+          }
+        } catch (error) {
+          // 許可リクエスト中にエラーが発生した場合
+          statusDiv.textContent = `センサー許可中にエラーが発生しました: ${error.message}`;
+        }
+      } else {
+        // iPhone以外（または許可リクエストが不要な環境）の場合
+        statusDiv.textContent = 'このデバイスではセンサー許可が不要です。センサーを開始します。';
+        permissionButton.style.display = 'none'; // ボタンを非表示
+        startDeviceMotionListener(); // センサーを開始
+      }
+    });
+
+   // 【2】加速度センサーのデータを取得し、表示
+    function startDeviceMotionListener() {
+      // デバイスの動き（加速度）を取得
+      window.addEventListener('devicemotion', (event) => {
+        // 加速度データを取得
+        const { x, y, z } = event.acceleration; // X, Y, Z 軸の加速度
+        if (x !== null && y !== null && z !== null) {
+          // XYZの加速度値をそれぞれ取得して合計値を計算
+          const sum = Math.abs(x) + Math.abs(y) + Math.abs(z); // 絶対値の合計
+          
+          // 加速度データをリアルタイムで表示
+          statusDiv.textContent = `加速度センサーのデータ - X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`;
+          // XYZの合計値を表示
+          sumDiv.textContent = `XYZの合計値: ${sum.toFixed(2)}`;
+        } else {
+          // データが取得できない場合
+          statusDiv.textContent = 'センサーからデータが取得できません。';
+          sumDiv.textContent = 'XYZの合計値: 取得できません';
+        }
+      });
+    }
    
     //加速度センサーのデータを取得
     window.addEventListener('devicemotion', (event) => {
